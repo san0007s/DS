@@ -1,0 +1,7 @@
+module modelReverse
+{
+    interface Reverse
+    {
+        string reverseString(in string s);
+    };
+};
