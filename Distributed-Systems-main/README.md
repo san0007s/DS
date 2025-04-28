@@ -63,6 +63,49 @@ Terminal 1:
     orbd -ORBInitialPort 1056&
     java ReverseServer -ORBInitialPort 1056& 
 
+## Fix: Move `modelCalculator/` out of `CalculatorFile/`
+
+1. From your `src/` folder, run:
+    
+    ```bash
+    mv CalculatorFile/modelCalculator ./
+    ```
+    
+    Now your tree should look like:
+    
+    ```
+    src/
+    ├─ modelCalculator/     ← IDL stubs/skeletons
+    └─ CalculatorFile/      ← your servant, server, client
+        ├─ CalculatorImpl.java
+        ├─ Server.java
+        └─ Client.java
+    ```
+    
+2. Recompile everything (from `src/`):
+    
+    ```bash
+    javac modelCalculator/*.java CalculatorFile/*.java
+    ```
+    
+3. Start ORBD (if not already):
+    
+    ```bash
+    orbd -ORBInitialPort 1050 -port 1051 &
+    ```
+    
+4. Run the server (still in `src/`):
+    
+    ```bash
+    java -cp . CalculatorFile.Server -ORBInitialPort 1050 -ORBInitialHost localhost
+    ```
+    
+5. In a new terminal (also `cd` to `src/`), run the client:
+    
+    ```bash
+    java -cp . CalculatorFile.Client -ORBInitialPort 1050 -ORBInitialHost localhost
+    ```
+
 Terminal 2:
 
     java ReverseClient -ORBInitialPort 1056 -ORBInitialHost localhost
